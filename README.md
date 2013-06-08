@@ -34,7 +34,7 @@ The `usemin` task has 2 actions:
 
 ### Finding assets
 
-By default `usemin` will look for a map object created by [grunt-filerev](https://github.com/yeoman/grunt-filerev), located in `grunt.filerev.sumamary`. If it doesn not find it it will revert to disk lookup which is longer.
+By default `usemin` will look for a map object created by [grunt-filerev](https://github.com/yeoman/grunt-filerev), located in `grunt.filerev.summary`. If it doesn not find it it will revert to disk lookup which is longer.
 
 Note that using the `options.revmap` (see bellow), you can furnish a map object.
 
