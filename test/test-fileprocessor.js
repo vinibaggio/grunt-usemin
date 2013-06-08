@@ -79,22 +79,6 @@ describe('FileProcessor', function() {
 			assert.equal(result, '  <script src="foo.js"><\/script>');
 		});
 
-		it('should replace requirejs blocks with a link to a javascript file', function() {
-			var fp = new FileProcessor('html',{});
-			var block = {
-				dest: 'foo.js',
-				type: 'js',
-				requirejs: {
-					dest: 'main',
-					src: 'require.js'
-				},
-				indent: '  '
-			};
-
-			var result = fp.replaceWith(block);
-			assert.equal(result, '  <script data-main="main" src="require.js"><\/script>');
-		});
-
 	});
 
 	describe('replaceWithRevved', function() {
@@ -115,18 +99,7 @@ describe('FileProcessor', function() {
 	});
 
 	describe('process', function() {
-		// FIXME: mock File
-		// it('should parse file if a filename is furnished', function(done){
-		// 	var File = function(filename) {
-		// 		assert.equal(filename, 'foo')
-		// 	};
-		// 	var fp = new FileProcessor('html', {});
-		// 	fp.process('foo');
-
-		// });
-		it('should call replaceWithRevved with the right arguments', function() {
-
-		});
+		it('should call replaceWithRevved with the right arguments');
 	});
 
 	describe('html type', function() {

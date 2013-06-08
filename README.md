@@ -22,7 +22,7 @@ npm install grunt-usemin --save-dev
 
  - `usemin` which purpose is to replace blocks by the file they referenced, and replace all references to assets by their revved version , if it is found on the disk. This target modifies the files it is working on.
 
-Usually, `useminPrepare` is launched first, then the steps of the transformation flow (for example, `concat`, `uglify`, `cssmin` and `requirejs`), and then, in the end `usemin` is launched.
+Usually, `useminPrepare` is launched first, then the steps of the transformation flow (for example, `concat`, `uglify`, and `cssmin`), and then, in the end `usemin` is launched.
 
 
 ## The usemin task
@@ -161,7 +161,7 @@ An example of this in completed form can be seen below:
 The transformation flow is made of sequential steps: each of the step transform the file, and useminPrepare will modify the configuration in order to described steps are correctly performed.
 
 By default the flow is: `concat -> uglifyjs`.
-Additionnally to the flow, at the end, some postprocessors can be launched to alter further the configuration. The default processor used is 'requirejs': it alters the configuration to support requirejs correctly.
+Additionnally to the flow, at the end, some postprocessors can be launched to alter further the configuration.
 
 Let's have an example, using the default flow (we're just going to look at the steps), `app` for input dir, `dist` for output dir,  and the following block:
 
@@ -197,15 +197,7 @@ The produced configurartion will look like:
 
 Internally, the task parses your HTML markup to find each of these blocks, and initializes for you the corresponding Grunt config for the concat / uglify tasks when `type=js`, the concat / cssmin tasks when `type=css`.
 
-The task also handles use of RequireJS, for the scenario where you specify the main entry point for your application using the "data-main" attribute as follows:
-
-```html
-<!-- build:js js/app.min.js -->
-<script data-main="js/main" src="js/vendor/require.js"></script>
-<!-- -->
-```
-
-One doesn't need to specify a concat/uglify/cssmin or RequireJS configuration anymore.
+One doesn't need to specify a concat/uglify/cssmin configuration anymore.
 
 It is using only one target: `html`, with a list of the concerned files. For example, in your `Gruntfile.js`:
 
@@ -225,7 +217,7 @@ Base directory where the transformed files should be output.
 
 ### flow
 Type: 'object'
-Default: { steps: ['concat', 'uglify'], post: ['requirejs']}
+Default: { steps: ['concat', 'uglify'], post: ['foobar']}
 
 This allow you to configure the workflow, either on a per-target basis, or for all the targets.
 You can change separately the `steps` or the post-processors (`post`).

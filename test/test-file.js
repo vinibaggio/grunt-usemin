@@ -30,27 +30,22 @@ describe('File', function() {
   it('should return the right number of blocks with the right number of lines', function () {
     var filename = __dirname + '/fixtures/usemin.html';
     var file = new File(filename);
-    assert.equal(3, file.blocks.length);
+    assert.equal(2, file.blocks.length);
     var b1 = file.blocks[0];
     var b2 = file.blocks[1];
-    var b3 = file.blocks[2];
     assert.equal(3, b1.raw.length);
     assert.equal('css', b1.type);
     assert.equal(1, b1.src.length);
     assert.equal(16, b2.raw.length);
     assert.equal('js', b2.type);
     assert.equal(13, b2.src.length);
-    assert.equal(3, b3.raw.length);
-    assert.equal('js', b3.type);
-    assert.equal(1, b3.src.length); // requirejs has been added also
   });
 
   it('should also detect block that use alternate search dir', function () {
     var filename = __dirname + '/fixtures/alternate_search_path.html';
     var file = new File(filename);
-    assert.equal(2, file.blocks.length);
+    assert.equal(1, file.blocks.length);
     var b1 = file.blocks[0];
-    var b2 = file.blocks[1];
 
     assert.equal(4, b1.raw.length);
     assert.equal('js', b1.type);
@@ -58,47 +53,25 @@ describe('File', function() {
     assert.equal(b1.searchPath.length, 1);
     assert.equal(b1.src[0], 'scripts/bar.js');
     assert.equal(b1.src[1], 'scripts/baz.js');
-    assert.equal(3, b2.raw.length);
-    assert.equal('js', b2.type);
 
     assert.equal(2, b1.src.length);
   });
 
-  it('should detect and handle the usage on RequireJS in blocks', function () {
-    var filename = __dirname + '/fixtures/usemin.html';
-    var file = new File(filename);
-    assert.equal(3, file.blocks.length);
-
-    var rjsblock = file.blocks[2];
-    assert.ok(rjsblock.requirejs);
-    assert.equal('scripts/amd-app.js', rjsblock.requirejs.dest);
-    assert.equal('scripts', rjsblock.requirejs.baseUrl);
-    assert.equal('scripts/vendor/require.js', rjsblock.requirejs.src);
-    assert.equal('main', rjsblock.requirejs.name);
+  it('should throw an exception if it finds RequireJS blocks', function() {
+    var filename = __dirname + '/fixtures/requirejs.html';
+    assert.throws( function() {
+      new File(filename);
+    }, Error);
   });
 
   it('should not take into consideration path of the source file', function () {
     var filename = __dirname + '/fixtures/usemin.html';
     var file = new File(filename);
 
-    assert.equal(3, file.blocks.length);
+    assert.equal(2, file.blocks.length);
     assert.equal('/styles/main.min.css', file.blocks[0].dest);
     assert.equal(1, file.blocks[0].src.length);
     assert.equal('styles/main.css', file.blocks[0].src[0]);
-  });
-
-  it('should not take into consideration path of the source file (RequireJS)', function () {
-    var filename = __dirname + '/fixtures/usemin.html';
-    var file = new File(filename);
-
-    assert.equal(3, file.blocks.length);
-    var rjsblock = file.blocks[2];
-
-    assert.equal('scripts/amd-app.js', rjsblock.dest);
-    assert.ok(rjsblock.requirejs);
-    assert.equal('scripts/amd-app.js', rjsblock.requirejs.dest);
-    assert.equal('scripts', rjsblock.requirejs.baseUrl);
-    assert.equal('main', rjsblock.requirejs.name);
   });
 
   it('should not take into consideration source files referenced from root', function () {
@@ -108,19 +81,5 @@ describe('File', function() {
     assert.equal(1, file.blocks.length);
     assert.equal('/scripts/foo.js', file.blocks[0].dest);
   });
-
-  it('should keep track of require.js location', function () {
-    var filename = __dirname + '/fixtures/usemin.html';
-    var file = new File(filename);
-
-    assert.equal(3, file.blocks.length);
-    var rjsblock = file.blocks[2];
-
-    assert.ok(rjsblock.requirejs);
-    assert.equal('scripts/vendor/require.js', rjsblock.requirejs.origScript);
-    assert.equal('scripts/vendor/require.js', rjsblock.requirejs.srcDest);
-  });
-
-
 
 });

@@ -88,19 +88,6 @@ var getLocator = function (grunt, options) {
 // initializes for you the corresponding Grunt config for the concat / uglify tasks
 // when `type=js`, the concat / cssmin tasks when `type=css`.
 //
-// The task also handles use of RequireJS, for the scenario where you specify
-// the main entry point for your application using the "data-main" attribute
-// as follows:
-//
-//     <!-- build:js js/app.min.js -->
-//     <script data-main="js/main" src="js/vendor/require.js"></script>
-//     <!-- -->
-//
-// One doesn't need to specify a concat/uglify/cssmin or requirejs configuration anymore.
-//
-// Inspired by previous work in https://gist.github.com/3024891
-// For related sample, see: cli/test/tasks/usemin-handler/index.html
-//
 
 module.exports = function (grunt) {
   var FileProcessor = require('../lib/fileprocessor');
@@ -173,8 +160,13 @@ module.exports = function (grunt) {
     });
 
     files.forEach(function (filepath) {
-
-      var config = c.process(filepath, grunt.config());
+      var config;
+      try {
+        config = c.process(filepath, grunt.config());
+      }
+      catch(e) {
+        grunt.fail.fatal(e);
+      }
 
       _.each(cfgNames, function(name) {
         gruntConfig[name] = grunt.config(name) || {};
