@@ -32,6 +32,12 @@ The `usemin` task has 2 actions:
 - First it replaces all the blocks with a single "summary" line, pointing at a file creating by the transformation flow.
 - Then it looks for references to assets (i.e. images, scripts, ...), and tries to replace them with their revved version if it can find one on disk
 
+### Finding assets
+
+By default `usemin` will look for a map object created by [grunt-filerev](https://github.com/yeoman/grunt-filerev), located in `grunt.filerev.sumamary`. If it doesn not find it it will revert to disk lookup which is longer.
+
+Note that using the `options.revmap` (see bellow), you can furnish a map object.
+
 ### On directories
 
 When `usemin` tries to replace referenced assets with their revved version it has to look at a collection of directories (asset search paths): for each of the directory of this collection it will look at the bellow tree, and try to find the revved version.

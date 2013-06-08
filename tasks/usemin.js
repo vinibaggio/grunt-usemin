@@ -24,6 +24,25 @@ var getFlowFromConfig = function(config,target) {
 };
 
 //
+// Return which locator to use to get the revisioned version (revved) of the files, with, by order of
+// preference:
+// - a map object passed in option (revmap)
+// - a map object produced by grunt-filerev if available
+// - a disk lookup
+//
+var getLocator = function (grunt, options) {
+  var locator;
+  if (options.revmap) {
+    locator = grunt.file.readJSON(options.revmap);
+  } else if (grunt.filerev && grunt.filerev.summary) {
+    locator = grunt.filerev.summary;
+  } else {
+    locator = function (p) { return grunt.file.expand({filter: 'isFile'}, p); };
+  }
+  return locator;
+};
+
+//
 // ### Usemin
 
 // Replaces references to non-optimized scripts or stylesheets
@@ -109,7 +128,8 @@ module.exports = function (grunt) {
       patterns = options.type;
     }
 
-    var locator = options.revmap ? grunt.file.readJSON(options.revmap) : function (p) { return grunt.file.expand({filter: 'isFile'}, p); };
+    // var locator = options.revmap ? grunt.file.readJSON(options.revmap) : function (p) { return grunt.file.expand({filter: 'isFile'}, p); };
+    var locator = getLocator(grunt, options);
     var revvedfinder = new RevvedFinder(locator);
     var handler = new FileProcessor(patterns, revvedfinder, function (msg) { grunt.log.writeln(msg);});
 

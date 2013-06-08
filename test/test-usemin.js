@@ -310,6 +310,24 @@ describe('usemin', function () {
 
   });
 
+  it('should use filerev map object when available', function() {
+    // grunt.file.mkdir('images');
+    // grunt.file.write('images/test.2132.png', 'foo');
+    // grunt.file.write('images/test.2134.png', 'foo');
+    grunt.filerev = {summary: {'images/test.png': 'images/test.2134.png'}};
+    grunt.log.muted = true;
+    grunt.config.init();
+    grunt.config('usemin', {html: 'index.html'});
+    grunt.file.copy(path.join(__dirname, 'fixtures/usemin.html'), 'index.html');
+    grunt.task.run('usemin');
+    grunt.task.start();
+
+    var changed = grunt.file.read('index.html');
+    // Check replace has performed its duty
+    assert.ok(changed.match('<img src="images/test.2134.png">'));
+    grunt.filerev = null;
+  });
+
 });
 
 describe('useminPrepare', function () {
