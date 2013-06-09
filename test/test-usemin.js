@@ -335,18 +335,7 @@ describe('useminPrepare', function () {
   });
 
 
-  it('should create a requirejs multitask config setting with name and output if non settings exists', function () {
-    grunt.log.muted = true;
-    grunt.config.init();
-    grunt.config('useminPrepare', {html: 'index.html'});
-
-    grunt.file.copy(path.join(__dirname, 'fixtures/usemin.html'), 'index.html');
-    grunt.task.run('useminPrepare');
-    grunt.task.start();
-
-  });
-
-  it('output config for subsequent tasks (requirejs, concat, ..) should be relative to observed file', function () {
+  it('output config for subsequent tasks should be relative to observed file', function () {
     grunt.log.muted = true;
     grunt.config.init();
     grunt.config('useminPrepare', {html: 'build/index.html'});
@@ -362,6 +351,32 @@ describe('useminPrepare', function () {
 
     var uglify = grunt.config('uglify');
     assert.deepEqual(uglify[path.normalize('dist/scripts/foo.js')], [path.normalize('.tmp/concat/scripts/foo.js')]);
+  });
+
+  describe('absolute path', function() {
+    // This is an interesting test case: root file is foo, html file is in foo/build and js
+    // sources in foo/scripts
+    // we should thus read fille in foo/scripts ...
+    it('should accept a root directory', function() {
+      grunt.log.muted = true;
+      grunt.config.init();
+      grunt.config('useminPrepare', {html: 'foo/build/index.html', options: { root: 'foo' }});
+      grunt.file.mkdir('foo');
+      grunt.file.mkdir('foo/build');
+      grunt.file.copy(path.join(__dirname, 'fixtures/absolute.html'), 'foo/build/index.html');
+      grunt.task.run('useminPrepare');
+      grunt.task.start();
+
+      var concat = grunt.config('concat');
+      assert.ok(concat);
+
+      assert.ok(concat[path.normalize('.tmp/concat/scripts/foo.js')]);
+      assert.equal(concat[path.normalize('.tmp/concat/scripts/foo.js')].length, 2);
+      assert.equal(concat[path.normalize('.tmp/concat/scripts/foo.js')][0], 'foo/scripts/bar.js' );
+
+      var uglify = grunt.config('uglify');
+      assert.deepEqual(uglify[path.normalize('dist/scripts/foo.js')], [path.normalize('.tmp/concat/scripts/foo.js')]);
+    });
   });
 
   it('should take dest option into consideration', function () {
@@ -396,10 +411,8 @@ describe('useminPrepare', function () {
 
     var uglify = grunt.config('uglify');
     var concat = grunt.config('concat');
-    var requirejs = grunt.config('requirejs');
 
     assert.equal(concat, null);
-    assert.equal(requirejs, null);
     assert.ok(uglify);
 
     assert.equal(uglify[path.normalize('dist/styles/main.min.css')], path.normalize('styles/main.css'));
@@ -426,10 +439,8 @@ describe('useminPrepare', function () {
 
     var uglify = grunt.config('uglify');
     var concat = grunt.config('concat');
-    var requirejs = grunt.config('requirejs');
 
     assert.equal(concat, null);
-    assert.equal(requirejs, null);
     assert.ok(uglify);
 
     assert.equal(uglify[path.normalize('dist/styles/main.min.css')], path.normalize('styles/main.css'));

@@ -66,28 +66,6 @@ helpers.cssBlock = function() {
   };
 };
 
-helpers.requirejsBlock = function() {
-  return {
-      type: 'js',
-      dest: 'scripts/amd-app.js',
-      searchPath: [],
-      indent: '',
-      requirejs: {
-        dest: 'scripts/amd-app.js',
-        baseUrl: 'scripts',
-        name: 'main',
-        origScript: 'foo/require.js',
-        src: 'foo/require.js'
-      },
-      src: [ 'scripts/main.js' ],
-      raw: [
-        '<!-- build:js scripts/amd-app.js -->',
-        '<script data-main="scripts/main" src="foo/require.js"></script>',
-        '<!-- endbuild -->'
-      ]
-    };
-};
-
 helpers.createFile = function(name, dir, blocks) {
   return {
     name: name,

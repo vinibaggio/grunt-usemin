@@ -24,7 +24,6 @@ describe('ConfigWriter', function () {
 
   describe('process', function() {
     var blocks = helpers.blocks();
-    var blockWithRequirejs = helpers.requirejsBlock();
 
     it('should check for input parameters');
 
@@ -70,24 +69,6 @@ describe('ConfigWriter', function () {
       var c = new ConfigWriter( flow, [], {input: 'app', dest: 'dist', staging: 'staging'} );
       var config = c.process(file);
       assert.deepEqual(config, helpers.normalize({'uglify': {'dist/scripts/site.js': ['app/foo.js', 'app/bar.js', 'app/baz.js']}}));
-    });
-
-    it('should rewrite the requirejs config if needed', function() {
-      var flow = ['concat', 'uglifyjs'];
-
-      var file = helpers.createFile('foo', 'app', [blockWithRequirejs]);
-      var c = new ConfigWriter( flow, ['requirejs'], {input: 'app', dest: 'dist', staging: 'staging'} );
-      var config = c.process(file);
-
-      assert.deepEqual(config, helpers.normalize({
-        'concat':{'staging/concat/scripts/amd-app.js': ['app/scripts/main.js']},
-        'uglify': {'dist/scripts/amd-app.js': ['staging/concat/scripts/amd-app.js']},
-        'requirejs': { 'default':
-          {
-            options: {name: 'main', out: 'dist/scripts/amd-app.js', baseUrl: 'app/scripts', mainConfigFile: 'app/scripts/main.js'}
-          }
-        }
-        }));
     });
 
     it('should allow for a configuration of the flow\'s step order', function() {

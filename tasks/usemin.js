@@ -10,7 +10,7 @@ var inspect = function (obj) {
 //  - a general one
 //  - the default one
 var getFlowFromConfig = function(config,target) {
-  var flow = { steps: ['concat', 'uglifyjs'], post: ['requirejs']};
+  var flow = { steps: ['concat', 'uglifyjs'], post: []};
   if (config.options && config.options.flow) {
     if (config.options.flow[target]) {
       flow.steps = config.options.flow[target].steps;
@@ -141,6 +141,7 @@ module.exports = function (grunt) {
     // collect files
     var files = grunt.file.expand({filter: 'isFile'}, this.data);
     var dest = options.dest || 'dist';
+    var root = options.root;
 
     grunt.log
       .writeln('Going through ' + grunt.log.wordlist(files) + ' to update the config')
@@ -148,7 +149,7 @@ module.exports = function (grunt) {
 
     var flow = getFlowFromConfig(grunt.config('useminPrepare'), this.target);
 
-    var c = new ConfigWriter( flow.steps, flow.post, {input: 'app', dest: dest, staging: '.tmp'} );
+    var c = new ConfigWriter( flow.steps, flow.post, {root: root, dest: dest, staging: '.tmp'} );
 
     var cfgNames = [];
     c.steps.forEach(function(i) { cfgNames.push(i.name);});
