@@ -306,13 +306,13 @@ describe('useminPrepare', function () {
     var concat = grunt.config('concat');
 
     assert.ok(concat);
-    assert.ok(concat[path.normalize('.tmp/concat/scripts/plugins.js')]);
-    assert.equal(concat[path.normalize('.tmp/concat/scripts/plugins.js')].length, 13);
-    assert.ok(concat[path.normalize('.tmp/concat/styles/main.min.css')]);
-    assert.equal(concat[path.normalize('.tmp/concat/styles/main.min.css')].length, 1);
+    assert.ok(concat.generated[path.normalize('.tmp/concat/scripts/plugins.js')]);
+    assert.equal(concat.generated[path.normalize('.tmp/concat/scripts/plugins.js')].length, 13);
+    assert.ok(concat.generated[path.normalize('.tmp/concat/styles/main.min.css')]);
+    assert.equal(concat.generated[path.normalize('.tmp/concat/styles/main.min.css')].length, 1);
 
     var uglify = grunt.config('uglify');
-    assert.equal(uglify[path.normalize('dist/scripts/plugins.js')], path.normalize('.tmp/concat/scripts/plugins.js'));
+    assert.equal(uglify.generated[path.normalize('dist/scripts/plugins.js')], path.normalize('.tmp/concat/scripts/plugins.js'));
   });
 
   it('should use alternate search dir if asked to', function () {
@@ -325,13 +325,13 @@ describe('useminPrepare', function () {
 
     var concat = grunt.config('concat');
     assert.ok(concat);
-    assert.ok(concat[path.normalize('.tmp/concat/scripts/foo.js')]);
-    assert.equal(concat[path.normalize('.tmp/concat/scripts/foo.js')].length, 2);
-    assert.equal(concat[path.normalize('.tmp/concat/scripts/foo.js')][0], path.normalize('build/scripts/bar.js'));
-    assert.equal(concat[path.normalize('.tmp/concat/scripts/foo.js')][1], path.normalize('build/scripts/baz.js'));
+    assert.ok(concat.generated[path.normalize('.tmp/concat/scripts/foo.js')]);
+    assert.equal(concat.generated[path.normalize('.tmp/concat/scripts/foo.js')].length, 2);
+    assert.equal(concat.generated[path.normalize('.tmp/concat/scripts/foo.js')][0], path.normalize('build/scripts/bar.js'));
+    assert.equal(concat.generated[path.normalize('.tmp/concat/scripts/foo.js')][1], path.normalize('build/scripts/baz.js'));
 
     var uglify = grunt.config('uglify');
-    assert.deepEqual(uglify[path.normalize('dist/scripts/foo.js')], [path.normalize('.tmp/concat/scripts/foo.js')]);
+    assert.deepEqual(uglify.generated[path.normalize('dist/scripts/foo.js')], [path.normalize('.tmp/concat/scripts/foo.js')]);
   });
 
 
@@ -346,11 +346,11 @@ describe('useminPrepare', function () {
 
     var concat = grunt.config('concat');
     assert.ok(concat);
-    assert.ok(concat[path.normalize('.tmp/concat/scripts/foo.js')]);
-    assert.equal(concat[path.normalize('.tmp/concat/scripts/foo.js')].length, 2);
+    assert.ok(concat.generated[path.normalize('.tmp/concat/scripts/foo.js')]);
+    assert.equal(concat.generated[path.normalize('.tmp/concat/scripts/foo.js')].length, 2);
 
     var uglify = grunt.config('uglify');
-    assert.deepEqual(uglify[path.normalize('dist/scripts/foo.js')], [path.normalize('.tmp/concat/scripts/foo.js')]);
+    assert.deepEqual(uglify.generated[path.normalize('dist/scripts/foo.js')], [path.normalize('.tmp/concat/scripts/foo.js')]);
   });
 
   describe('absolute path', function() {
@@ -370,12 +370,12 @@ describe('useminPrepare', function () {
       var concat = grunt.config('concat');
       assert.ok(concat);
 
-      assert.ok(concat[path.normalize('.tmp/concat/scripts/foo.js')]);
-      assert.equal(concat[path.normalize('.tmp/concat/scripts/foo.js')].length, 2);
-      assert.equal(concat[path.normalize('.tmp/concat/scripts/foo.js')][0], 'foo/scripts/bar.js' );
+      assert.ok(concat.generated[path.normalize('.tmp/concat/scripts/foo.js')]);
+      assert.equal(concat.generated[path.normalize('.tmp/concat/scripts/foo.js')].length, 2);
+      assert.equal(concat.generated[path.normalize('.tmp/concat/scripts/foo.js')][0], 'foo/scripts/bar.js' );
 
       var uglify = grunt.config('uglify');
-      assert.deepEqual(uglify[path.normalize('dist/scripts/foo.js')], [path.normalize('.tmp/concat/scripts/foo.js')]);
+      assert.deepEqual(uglify.generated[path.normalize('dist/scripts/foo.js')], [path.normalize('.tmp/concat/scripts/foo.js')]);
     });
   });
 
@@ -389,7 +389,7 @@ describe('useminPrepare', function () {
 
     var uglify = grunt.config('uglify');
 
-    assert.equal(uglify[path.normalize('foo/scripts/plugins.js')], path.normalize('.tmp/concat/scripts/plugins.js'));
+    assert.equal(uglify.generated[path.normalize('foo/scripts/plugins.js')], path.normalize('.tmp/concat/scripts/plugins.js'));
 
   });
 
@@ -415,7 +415,7 @@ describe('useminPrepare', function () {
     assert.equal(concat, null);
     assert.ok(uglify);
 
-    assert.equal(uglify[path.normalize('dist/styles/main.min.css')], path.normalize('styles/main.css'));
+    assert.equal(uglify.generated[path.normalize('dist/styles/main.min.css')], path.normalize('styles/main.css'));
 
   });
 
@@ -443,7 +443,7 @@ describe('useminPrepare', function () {
     assert.equal(concat, null);
     assert.ok(uglify);
 
-    assert.equal(uglify[path.normalize('dist/styles/main.min.css')], path.normalize('styles/main.css'));
+    assert.equal(uglify.generated[path.normalize('dist/styles/main.min.css')], path.normalize('styles/main.css'));
 
   });
 
@@ -477,8 +477,8 @@ describe('useminPrepare', function () {
     var copyCfg = grunt.config('copy');
 
     assert.ok(copyCfg);
-    assert.ok(copyCfg[path.normalize('dist/styles/main.min.css')]);
-    assert.ok(copyCfg[path.normalize('dist/scripts/plugins.js')]);
+    assert.ok(copyCfg.generated[path.normalize('dist/styles/main.min.css')]);
+    assert.ok(copyCfg.generated[path.normalize('dist/scripts/plugins.js')]);
   });
 });
 
