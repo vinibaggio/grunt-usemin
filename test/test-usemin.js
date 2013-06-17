@@ -405,6 +405,23 @@ describe('usemin', function () {
       assert.equal(uglify['build/scripts/foo.js'], 'build/scripts/foo.js');
     });
 
+    it('output config for subsequent tasks (requirejs, concat, ..) should be configurable', function () {
+      grunt.log.muted = true;
+      grunt.config.init();
+      grunt.config('useminPrepare', {html: 'build/index.html', options: {basePath: 'different_path', dest: 'out'}});
+      grunt.file.mkdir('build');
+      grunt.file.copy(path.join(__dirname, 'fixtures/custom_basepath.html'), 'build/index.html');
+      grunt.task.run('useminPrepare');
+      grunt.task.start();
+
+      var concat = grunt.config('concat');
+      assert.ok(concat);
+      assert.ok(concat['out/styles/main.css']);
+      assert.equal(concat['out/styles/main.css'].length, 2);
+      assert.equal(concat['out/styles/main.css'][0], 'different_path/styles/first_one.css');
+      assert.equal(concat['out/styles/main.css'][1], 'different_path/styles/second_one.css');
+    });
+
     it('should take dest option into consideration', function () {
       grunt.log.muted = true;
       grunt.config.init();

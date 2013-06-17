@@ -117,6 +117,7 @@ module.exports = function (grunt) {
     var uglifyName = options.uglify || 'uglify';
     var cssminName = options.cssmin || 'cssmin';
     var dest = options.dest;
+    var basePath = options.basePath;
 
     // concat / uglify / cssmin / requirejs config
     var concat = grunt.config('concat') || {};
@@ -137,7 +138,8 @@ module.exports = function (grunt) {
 
     files.forEach(function (file) {
       var revvedfinder = new RevvedFinder(function (p) { return grunt.file.expand({filter: 'isFile'}, p); });
-      var proc = new HTMLProcessor(path.dirname(file.path), dest, file.body, revvedfinder, function (msg) {
+      var srcPath = basePath || path.dirname(file.path);
+      var proc = new HTMLProcessor(srcPath, dest, file.body, revvedfinder, function (msg) {
         grunt.log.writeln(msg);
       });
 
